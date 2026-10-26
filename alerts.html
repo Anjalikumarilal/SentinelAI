@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SentinelAI - Alerts</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <header class="navbar">
+        <h1>🛡 SentinelAI</h1>
+        <span>Security Alerts</span>
+    </header>
+
+    <aside class="sidebar">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/alerts">Alerts</a>
+        <a href="/threat-intelligence">Threat Intelligence</a>
+        <a href="/incidents">Incidents</a>
+        <a href="/mitre">MITRE ATT&CK</a>
+        <a href="/pcap-analysis">PCAP Analysis</a>
+        <a href="/logout">Logout</a>
+    </aside>
+
+    <main class="main-content">
+
+        <h2>Security Alerts</h2>
+
+        <p>Monitor and investigate detected security events.</p>
+
+        <section class="recent-searches">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Alert ID</th>
+                        <th>Attack Type</th>
+                        <th>Source IP</th>
+                        <th>Risk Score</th>
+                        <th>Severity</th>
+                        <th>CTI Reputation</th>
+                        <th>CTI Score</th>
+                        <th>MITRE Technique</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for alert in alerts %}
+
+                    <tr>
+                        <td>
+                            <a href="/alerts/{{ alert.id }}">
+                                {{ alert.id }}
+                            </a>
+                        </td>
+
+                        <td>{{ alert.attack_type }}</td>
+
+                        <td>{{ alert.source_ip }}</td>
+
+                        <td>{{ alert.risk_score }}</td>
+
+                        <td>
+                            {{ alert.severity }}
+                        </td>
+
+                        <td>
+                            {% if "Reputation: Malicious" in alert.threat_intelligence %}
+                                Malicious
+                            {% elif "Reputation: Suspicious" in alert.threat_intelligence %}
+                                Suspicious
+                            {% else %}
+                                Unknown
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if "Threat Score:" in alert.threat_intelligence %}
+                                {{ alert.threat_intelligence.split("Threat Score: ")[1].split(";")[0] }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ alert.mitre_technique or "N/A" }}
+                        </td>
+
+                        <td>
+                            {{ alert.status }}
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

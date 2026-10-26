@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SentinelAI - PCAP Analysis</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #0f172a;
+        }
+
+        .topbar {
+            height: 60px;
+            background: #111827;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .top-title {
+            font-size: 14px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 198px;
+            height: calc(100vh - 60px);
+            background: #1f2937;
+            padding-top: 22px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 13px 27px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: #374151;
+        }
+
+        .main {
+            margin-left: 198px;
+            padding: 28px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 23px;
+        }
+
+        .subtitle {
+            margin-top: 4px;
+            color: #334155;
+            font-size: 14px;
+        }
+
+        .upload-card {
+            margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+        }
+
+        .section-title {
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+
+        .section-description {
+            margin: 0 0 22px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .drop-zone {
+            border: 2px dashed #94a3b8;
+            border-radius: 12px;
+            padding: 45px 20px;
+            text-align: center;
+            background: #f8fafc;
+        }
+
+        .upload-icon {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .drop-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .drop-text {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .choose-button {
+            display: inline-block;
+            padding: 10px 18px;
+            background: #111827;
+            color: white;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .choose-button:hover {
+            background: #374151;
+        }
+
+        .file-name {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #334155;
+            min-height: 20px;
+        }
+
+        .analyze-button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 12px;
+            border: none;
+            border-radius: 7px;
+            background: #e5e7eb;
+            color: #111827;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .analyze-button:hover {
+            background: #d1d5db;
+        }
+
+        /* Messages */
+
+        .error-message {
+            margin-top: 20px;
+            padding: 13px 16px;
+            border-radius: 8px;
+            background: #fee2e2;
+            color: #991b1b;
+            font-size: 14px;
+        }
+
+        /* Results */
+
+        .results-section {
+            margin-top: 28px;
+        }
+
+        .results-title {
+            margin: 0 0 15px;
+            font-size: 19px;
+        }
+
+        .file-result {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+        }
+
+        .file-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .file-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .detected-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #fee2e2;
+            color: #991b1b;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .result-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 9px;
+            padding: 17px;
+            background: #f8fafc;
+        }
+
+        .result-card h4 {
+            margin: 0 0 14px;
+            font-size: 15px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 9px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: bold;
+            color: #334155;
+        }
+
+        .result-value {
+            text-align: right;
+            color: #0f172a;
+        }
+
+        .high-severity {
+            font-weight: bold;
+            color: #dc2626;
+        }
+
+        .critical-severity {
+            font-weight: bold;
+            color: #991b1b;
+        }
+
+        .medium-severity {
+            font-weight: bold;
+            color: #d97706;
+        }
+
+        .low-severity {
+            font-weight: bold;
+            color: #15803d;
+        }
+
+        .alert-created {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #1e40af;
+            font-size: 13px;
+        }
+
+        .view-alert {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 13px;
+            background: #111827;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .view-alert:hover {
+            background: #374151;
+        }
+
+        .no-detection {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+            color: #475569;
+            font-size: 14px;
+        }
+
+        /* Information cards */
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+        }
+
+        .info-card h3 {
+            margin: 0 0 8px;
+            font-size: 15px;
+        }
+
+        .info-card p {
+            margin: 0;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 900px) {
+
+            .result-grid,
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 160px;
+            }
+
+            .main {
+                margin-left: 160px;
+                padding: 20px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <div class="brand">
+            🛡 SentinelAI
+        </div>
+
+        <div class="top-title">
+            PCAP Analysis
+        </div>
+
+    </div>
+
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/alerts">
+            Alerts
+        </a>
+
+        <a href="/threat-intelligence">
+            Threat Intelligence
+        </a>
+
+        <a href="/incidents">
+            Incidents
+        </a>
+
+        <a href="/mitre">
+            MITRE ATT&CK
+        </a>
+
+        <a href="/pcap-analysis" class="active">
+            PCAP Analysis
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+
+    <!-- MAIN -->
+
+    <div class="main">
+
+        <h1 class="page-title">
+            PCAP Analysis
+        </h1>
+
+        <p class="subtitle">
+            Upload network traffic captures for automated security analysis.
+        </p>
+
+
+        <!-- UPLOAD -->
+
+        <div class="upload-card">
+
+            <h2 class="section-title">
+                📁 Upload Network Capture
+            </h2>
+
+            <p class="section-description">
+                Upload a PCAP or PCAPNG file to analyze network activity,
+                detect suspicious behavior and generate security alerts.
+            </p>
+
+            <form
+                action="/pcap-analysis"
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                <div class="drop-zone">
+
+                    <div class="upload-icon">
+                        📡
+                    </div>
+
+                    <div class="drop-title">
+                        Select a PCAP file
+                    </div>
+
+                    <div class="drop-text">
+                        Supported formats: .pcap and .pcapng
+                    </div>
+
+                    <label
+                        for="pcapFile"
+                        class="choose-button"
+                    >
+                        Choose PCAP File
+                    </label>
+
+                    <input
+                        type="file"
+                        id="pcapFile"
+                        name="pcap_file"
+                        class="file-input"
+                        accept=".pcap,.pcapng"
+                        onchange="showFileName()"
+                    >
+
+                    <div
+                        id="fileName"
+                        class="file-name"
+                    >
+                        No file selected
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="analyze-button"
+                >
+                    🔍 Analyze PCAP
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ERROR -->
+
+        {% if error_message %}
+
+        <div class="error-message">
+
+            ❌ {{ error_message }}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- RESULTS -->
+
+        {% if filename %}
+
+        <div class="results-section">
+
+            <h2 class="results-title">
+                🔬 PCAP Analysis Result
+            </h2>
+            
+            <!-- AI / ML ANALYSIS -->
+
+            {% if ml_result %}
+
+            <div class="result-card" style="margin-bottom: 18px;">
+
+                <h4>
+                    🤖 AI / ML Traffic Analysis
+                </h4>
+
+                <div class="result-row">
+
+                    <span class="result-label">
+                        ML Status
+                    </span>
+
+                    <span class="result-value">
+                        {{ ml_result.ml_status }}
+                    </span>
+
+                </div>
+
+                <div class="result-row">
+
+                    <span class="result-label">
+                        Anomaly Score
+                    </span>
+
+                    <span class="result-value">
+                        {{ ml_result.anomaly_score }} / 100
+                    </span>
+
+                </div>
+
+                <div class="result-row">
+
+                    <span class="result-label">
+                        Anomalous Connections
+                    </span>
+
+                    <span class="result-value">
+                        {{ ml_result.anomalous_connections }}
+                    </span>
+
+                </div>
+
+                <div class="result-row">
+
+                    <span class="result-label">
+                        Total Connections
+                    </span>
+
+                    <span class="result-value">
+                        {{ ml_result.total_connections }}
+                    </span>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+            {% if results %}
+
+                {% for result in results %}
+
+                    <div class="file-result">
+
+                        <div class="file-header">
+
+                            <h3>
+                                📄 {{ filename }}
+                            </h3>
+
+                            <span class="detected-badge">
+                                🚨 THREAT DETECTED
+                            </span>
+
+                        </div>
+
+
+                        <div class="result-grid">
+
+
+                            <!-- DETECTION DETAILS -->
+
+                            <div class="result-card">
+
+                                <h4>
+                                    🔎 Detection Details
+                                </h4>
+
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Attack Type
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.attack_type }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Source IP
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.source_ip }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Destination IP
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.destination_ip }}
+                                    </span>
+
+                                </div>
+
+
+                                <!-- PORT SCAN SPECIFIC DATA -->
+
+                                {% if result.detection.attack_type == "Port Scan" %}
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Ports Scanned
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.ports_scanned }}
+                                    </span>
+
+                                </div>
+
+                                {% endif %}
+
+
+                                <!-- BRUTE FORCE SPECIFIC DATA -->
+
+                                {% if result.detection.attack_type == "Brute Force" %}
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Service
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.service }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Attempts
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.attempts }}
+                                    </span>
+
+                                </div>
+
+                                {% endif %}
+                                
+                                <!-- SYN FLOOD SPECIFIC DATA -->
+
+                                {% if result.detection.attack_type == "SYN Flood" %}
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        SYN Packets
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.syn_count }}
+                                    </span>
+
+                                </div>
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Destination Port
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.destination_port }}
+                                    </span>
+
+                                </div>
+
+                                {% endif %}
+
+                                <!-- UDP FLOOD SPECIFIC DATA -->
+
+                                {% if result.detection.attack_type == "UDP Flood" %}
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        UDP Packets
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.packet_count }}
+                                    </span>
+
+                                </div>
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Destination Port
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.destination_port }}
+                                    </span>
+
+                                </div>
+
+                                {% endif %}
+
+                                <!-- DNS SPECIFIC DATA -->
+
+                                {% if result.detection.attack_type == "Suspicious DNS Activity" %}
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        DNS Query
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.dns_query }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Query Count
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.query_count }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Keyword Matches
+                                    </span>
+
+                                    <span class="result-value">
+                                        {% if result.detection.keyword_matches %}
+                                            {{ result.detection.keyword_matches | join(", ") }}
+                                        {% else %}
+                                            None
+                                        {% endif %}
+                                    </span>
+
+                                </div>
+
+                                {% endif %}
+
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Confidence
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.confidence }}%
+                                    </span>
+
+                                </div>
+
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Severity
+                                    </span>
+
+                                    <span class="result-value
+                                        {% if result.detection.severity == 'CRITICAL' %}
+                                            critical-severity
+                                        {% elif result.detection.severity == 'HIGH' %}
+                                            high-severity
+                                        {% elif result.detection.severity == 'MEDIUM' %}
+                                            medium-severity
+                                        {% else %}
+                                            low-severity
+                                        {% endif %}
+                                    ">
+                                        {{ result.detection.severity }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        Detection Risk
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.risk_score }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="result-row">
+
+                                    <span class="result-label">
+                                        MITRE ATT&CK
+                                    </span>
+
+                                    <span class="result-value">
+                                        {{ result.detection.mitre_technique }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ALERT DETAILS -->
+
+                            <div class="result-card">
+
+                                <h4>
+                                    🚨 Alert Generated
+                                </h4>
+
+
+                                {% if result.alert %}
+
+                                    {% set alert = result.alert[0] if result.alert is sequence and result.alert is not string else result.alert %}
+
+
+                                    <div class="result-row">
+
+                                        <span class="result-label">
+                                            Alert ID
+                                        </span>
+
+                                        <span class="result-value">
+                                            #{{ alert.id }}
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="result-row">
+
+                                        <span class="result-label">
+                                            Final Risk Score
+                                        </span>
+
+                                        <span class="result-value">
+                                            {{ alert.risk_score }}
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="result-row">
+
+                                        <span class="result-label">
+                                            Alert Severity
+                                        </span>
+
+                                        <span class="result-value">
+                                            {{ alert.severity }}
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="result-row">
+
+                                        <span class="result-label">
+                                            CTI
+                                        </span>
+
+                                        <span class="result-value">
+                                            Mock CTI
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="result-row">
+
+                                        <span class="result-label">
+                                            Status
+                                        </span>
+
+                                        <span class="result-value">
+                                            {{ alert.status }}
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="alert-created">
+
+                                        ✅ Security alert created successfully.
+
+                                        HIGH/CRITICAL alerts are automatically
+                                        processed for incident management.
+
+                                    </div>
+
+
+                                    <a
+                                        href="/alerts/{{ alert.id }}"
+                                        class="view-alert"
+                                    >
+                                        View Alert →
+                                    </a>
+
+
+                                {% else %}
+
+                                    <div class="alert-created">
+
+                                        ⚠ Detection found, but alert information
+                                        was not returned.
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+
+            {% else %}
+
+                <div class="no-detection">
+
+                    ✅ PCAP processed successfully.
+
+                    <br><br>
+
+                    No supported suspicious activity was detected
+                    in this capture.
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- INFORMATION CARDS -->
+
+        <div class="info-grid">
+
+            <div class="info-card">
+
+                <h3>
+                    🔎 Traffic Analysis
+                </h3>
+
+                <p>
+                    Extract network connections, source IPs,
+                    destination IPs and destination ports.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <h3>
+                    🚨 Threat Detection
+                </h3>
+
+                <p>
+                    Detect suspicious network behavior such as
+                    port scanning, brute-force activity and
+                    other attack patterns.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <h3>
+                    🛡 Automated Response
+                </h3>
+
+                <p>
+                    Detected threats flow into CTI,
+                    risk scoring, alerts and incident management.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        function showFileName() {
+
+            const input =
+                document.getElementById("pcapFile");
+
+            const fileName =
+                document.getElementById("fileName");
+
+            if (input.files.length > 0) {
+
+                fileName.textContent =
+                    "Selected file: " +
+                    input.files[0].name;
+
+            } else {
+
+                fileName.textContent =
+                    "No file selected";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

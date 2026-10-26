@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SentinelAI - MITRE ATT&CK</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #0f172a;
+        }
+
+        /* TOP BAR */
+
+        .topbar {
+            height: 60px;
+            background: #111827;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .top-title {
+            font-size: 14px;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 198px;
+            height: calc(100vh - 60px);
+            background: #1f2937;
+            padding-top: 22px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 13px 27px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: #374151;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 198px;
+            padding: 28px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 23px;
+        }
+
+        .subtitle {
+            margin-top: 5px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* SUMMARY */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+        }
+
+        .summary-icon {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .summary-label {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .summary-value {
+            margin-top: 5px;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        /* TECHNIQUES */
+
+        .section {
+            margin-top: 28px;
+        }
+
+        .section-title {
+            margin: 0 0 15px;
+            font-size: 19px;
+        }
+
+        .technique-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .technique-card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+            border-left: 5px solid #111827;
+        }
+
+        .technique-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .technique-id {
+            display: inline-block;
+            padding: 6px 10px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .alert-count {
+            padding: 6px 11px;
+            border-radius: 20px;
+            background: #fee2e2;
+            color: #991b1b;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .technique-name {
+            margin: 14px 0 7px;
+            font-size: 18px;
+        }
+
+        .attack-type {
+            color: #475569;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .description {
+            margin-top: 15px;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        /* ATTACK FLOW */
+
+        .flow-card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+        }
+
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .flow-item {
+            padding: 12px 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: #64748b;
+        }
+
+        /* INFO */
+
+        .info-card {
+            margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+        }
+
+        .info-card h3 {
+            margin: 0 0 8px;
+            font-size: 16px;
+        }
+
+        .info-card p {
+            margin: 0;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+
+            .technique-grid,
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 160px;
+            }
+
+            .main {
+                margin-left: 160px;
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <div class="brand">
+            🛡 SentinelAI
+        </div>
+
+        <div class="top-title">
+            MITRE ATT&CK
+        </div>
+
+    </div>
+
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/alerts">
+            Alerts
+        </a>
+
+        <a href="/threat-intelligence">
+            Threat Intelligence
+        </a>
+
+        <a href="/incidents">
+            Incidents
+        </a>
+
+        <a href="/mitre" class="active">
+            MITRE ATT&CK
+        </a>
+
+        <a href="/pcap-analysis">
+            PCAP Analysis
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+
+    <!-- MAIN -->
+
+    <div class="main">
+
+        <h1 class="page-title">
+            MITRE ATT&CK
+        </h1>
+
+        <p class="subtitle">
+            Map detected security activity to MITRE ATT&CK techniques.
+        </p>
+
+
+        <!-- SUMMARY -->
+
+        <div class="summary-grid">
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    🎯
+                </div>
+
+                <div class="summary-label">
+                    Supported Techniques
+                </div>
+
+                <div class="summary-value">
+                    {{ techniques|length }}
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    🚨
+                </div>
+
+                <div class="summary-label">
+                    Technique-linked Alerts
+                </div>
+
+                <div class="summary-value">
+
+                    {% set ns = namespace(total_alerts=0) %}
+
+                    {% for technique in techniques %}
+                        {% set ns.total_alerts = ns.total_alerts + technique.alert_count %}
+                    {% endfor %}
+
+                    {{ ns.total_alerts }}
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    🛡️
+                </div>
+
+                <div class="summary-label">
+                    Detection Coverage
+                </div>
+
+                <div class="summary-value">
+                    Active
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TECHNIQUES -->
+
+        <div class="section">
+
+            <h2 class="section-title">
+                Detected Techniques
+            </h2>
+
+
+            <div class="technique-grid">
+
+                {% for technique in techniques %}
+
+                <div class="technique-card">
+
+                    <div class="technique-header">
+
+                        <span class="technique-id">
+                            {{ technique.id }}
+                        </span>
+
+                        <span class="alert-count">
+                            {{ technique.alert_count }} Alert(s)
+                        </span>
+
+                    </div>
+
+
+                    <h3 class="technique-name">
+                        {{ technique.name }}
+                    </h3>
+
+
+                    <div class="attack-type">
+                        Detection: {{ technique.attack_types | join(", ") }}
+                    </div>
+
+
+                    <div class="description">
+                        {{ technique.description }}
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- SECURITY FLOW -->
+
+        <div class="section">
+
+            <h2 class="section-title">
+                SentinelAI Detection Mapping
+            </h2>
+
+            <div class="flow-card">
+
+                <div class="flow">
+
+                    <div class="flow-item">
+                        📡 Network Traffic
+                    </div>
+
+                    <div class="flow-arrow">
+                        →
+                    </div>
+
+                    <div class="flow-item">
+                        🔎 Detection Engine
+                    </div>
+
+                    <div class="flow-arrow">
+                        →
+                    </div>
+
+                    <div class="flow-item">
+                        🎯 MITRE Mapping
+                    </div>
+
+                    <div class="flow-arrow">
+                        →
+                    </div>
+
+                    <div class="flow-item">
+                        🚨 Alert
+                    </div>
+
+                    <div class="flow-arrow">
+                        →
+                    </div>
+
+                    <div class="flow-item">
+                        🛡 Incident
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INFORMATION -->
+
+        <div class="info-card">
+
+            <h3>
+                ℹ️ About MITRE ATT&CK Mapping
+            </h3>
+
+            <p>
+                SentinelAI maps detected behaviors to MITRE ATT&CK
+                techniques to provide security analysts with
+                standardized information about attacker behavior.
+                Current detection coverage includes Network Service
+                Scanning (T1046), Brute Force (T1110), and
+                DNS (T1071.004), and Direct Network Flood (T1498.001).
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

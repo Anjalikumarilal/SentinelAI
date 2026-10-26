@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SentinelAI - Incident Investigation</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- ================================================= -->
+    <!-- NAVBAR -->
+    <!-- ================================================= -->
+
+    <header class="navbar">
+
+        <h1>🛡 SentinelAI</h1>
+
+        <span>Security Operations Center</span>
+
+    </header>
+
+
+    <!-- ================================================= -->
+    <!-- SIDEBAR -->
+    <!-- ================================================= -->
+
+    <aside class="sidebar">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/alerts">
+            Alerts
+        </a>
+
+        <a href="/threat-intelligence">
+            Threat Intelligence
+        </a>
+
+        <a href="/incidents">
+            Incidents
+        </a>
+
+        <a href="/mitre">
+            MITRE ATT&CK
+        </a>
+
+        <a href="/pcap-analysis">
+            PCAP Analysis
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- ================================================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ================================================= -->
+
+    <main class="main-content">
+
+        <h2>Incident Investigation</h2>
+
+        <p>
+            Investigate and manage security incident #{{ incident.id }}.
+        </p>
+
+
+        <!-- ================================================= -->
+        <!-- INCIDENT OVERVIEW -->
+        <!-- ================================================= -->
+
+        <section class="detail-card">
+
+            <h3>{{ incident.title }}</h3>
+
+            <table class="detail-table">
+
+                <tr>
+                    <th>Incident ID</th>
+                    <td>{{ incident.id }}</td>
+                </tr>
+
+                <tr>
+                    <th>Attack Type</th>
+                    <td>
+                        {{ incident.attack_type or "Unknown" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Source IP</th>
+                    <td>
+                        {{ incident.source_ip or "Unknown" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Destination IP</th>
+                    <td>
+                        {{ incident.destination_ip or "Unknown" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Risk Score</th>
+                    <td>
+                        <strong>
+                            {{ incident.risk_score or 0 }}/100
+                        </strong>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Severity</th>
+                    <td>
+                        {{ incident.severity or "Unknown" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>MITRE Technique</th>
+                    <td>
+                        {{ incident.mitre_technique or "Not mapped" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        {{ incident.status or "Unknown" }}
+                    </td>
+                </tr>
+
+            </table>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- INVESTIGATION FORM -->
+        <!-- ================================================= -->
+
+        <section class="detail-card">
+
+            <h3>Investigation</h3>
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'incidents.update_incident',
+                    incident_id=incident.id
+                ) }}"
+            >
+
+                <!-- Assigned Analyst -->
+
+                <div class="form-group">
+
+                    <label for="assigned_analyst">
+                        Assigned Analyst
+                    </label>
+
+                    <br>
+
+                    <input
+                        type="text"
+                        id="assigned_analyst"
+                        name="assigned_analyst"
+                        value="{{ incident.assigned_analyst or '' }}"
+                        placeholder="Enter analyst name"
+                    >
+
+                </div>
+
+
+                <!-- Status -->
+
+                <div class="form-group">
+
+                    <label for="status">
+                        Status
+                    </label>
+
+                    <br>
+
+                    <select
+                        id="status"
+                        name="status"
+                    >
+
+                        <option
+                            value="Open"
+                            {% if incident.status|upper == "OPEN" %}
+                            selected
+                            {% endif %}
+                        >
+                            Open
+                        </option>
+
+                        <option
+                            value="Investigating"
+                            {% if incident.status|upper == "INVESTIGATING" %}
+                            selected
+                            {% endif %}
+                        >
+                            Investigating
+                        </option>
+
+                        <option
+                            value="Resolved"
+                            {% if incident.status|upper == "RESOLVED" %}
+                            selected
+                            {% endif %}
+                        >
+                            Resolved
+                        </option>
+
+                        <option
+                            value="Closed"
+                            {% if incident.status|upper == "CLOSED" %}
+                            selected
+                            {% endif %}
+                        >
+                            Closed
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Investigation Notes -->
+
+                <div class="form-group">
+
+                    <label for="investigation_notes">
+                        Investigation Notes
+                    </label>
+
+                    <br>
+
+                    <textarea
+                        id="investigation_notes"
+                        name="investigation_notes"
+                        rows="6"
+                        placeholder="Enter investigation findings..."
+                    >{{ incident.investigation_notes or '' }}</textarea>
+
+                </div>
+
+
+                <!-- Save -->
+
+                <button type="submit">
+                    Save Investigation
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- BACK -->
+        <!-- ================================================= -->
+
+        <br>
+
+        <a href="/incidents">
+            ← Back to Incidents
+        </a>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

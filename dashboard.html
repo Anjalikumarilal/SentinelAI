@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SentinelAI - Security Operations Center</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="navbar">
+
+        <h1>🛡 SentinelAI</h1>
+
+        <span>
+            Security Operations Center
+        </span>
+
+    </header>
+
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/alerts">
+            Alerts
+        </a>
+
+        <a href="/threat-intelligence">
+            Threat Intelligence
+        </a>
+
+        <a href="/incidents">
+            Incidents
+        </a>
+
+        <a href="/mitre">
+            MITRE ATT&CK
+        </a>
+
+        <a href="/pcap-analysis">
+            PCAP Analysis
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+
+        <h2>
+            Threat Intelligence Overview
+        </h2>
+
+        <p>
+            Monitor and analyze potential cyber threats.
+        </p>
+
+
+        <!-- ================= SUMMARY CARDS ================= -->
+
+        <section class="cards">
+
+            <div class="card">
+
+                <h3>
+                    Total Threat Searches
+                </h3>
+
+                <p>
+                    {{ total_searches }}
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    High Risk
+                </h3>
+
+                <p>
+                    {{ high_risk }}
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    Medium Risk
+                </h3>
+
+                <p>
+                    {{ medium_risk }}
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    Open Incidents
+                </h3>
+
+                <p>
+                    {{ open_incidents }}
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    Critical Alerts
+                </h3>
+
+                <p>
+                    {{ critical_alerts }}
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SECURITY ANALYTICS
+        ====================================================== -->
+
+        <section class="security-overview">
+
+
+            <!-- ================= ATTACK TYPE CHART ================= -->
+
+            <div class="overview-card">
+
+                <h3>
+                    Attack Type Distribution
+                </h3>
+
+                <div style="
+                    position: relative;
+                    height: 300px;
+                    width: 100%;
+                ">
+
+                    <canvas
+                        id="attackTypeChart"
+                        data-attack-types='{{ attack_type_counts | tojson }}'>
+                    </canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= SEVERITY CHART ================= -->
+
+            <div class="overview-card">
+
+                <h3>
+                    Alert Severity Distribution
+                </h3>
+
+                <div style="
+                    position: relative;
+                    height: 300px;
+                    width: 100%;
+                ">
+
+                    <canvas
+                        id="severityChart"
+                        data-critical="{{ critical_alerts }}"
+                        data-high="{{ high_alerts }}"
+                        data-medium="{{ medium_alerts }}"
+                        data-low="{{ low_alerts }}"
+                        data-informational="{{ informational }}">
+                    </canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             AI / RISK ANALYTICS
+        ====================================================== -->
+
+        <section class="security-overview">
+
+
+            <!-- ================= ML ANALYTICS ================= -->
+
+            <div class="overview-card">
+
+                <h3>
+                    🤖 AI / ML Security Analytics
+                </h3>
+
+
+                <div class="severity-item">
+
+                    <span>
+                        ML Analyzed Alerts
+                    </span>
+
+                    <strong>
+                        {{ ml_analyzed_count }}
+                    </strong>
+
+                </div>
+
+
+                <div class="severity-item">
+
+                    <span>
+                        Anomalies Detected
+                    </span>
+
+                    <strong>
+                        {{ ml_anomaly_count }}
+                    </strong>
+
+                </div>
+
+
+                <div class="severity-item">
+
+                    <span>
+                        Average ML Score
+                    </span>
+
+                    <strong>
+                        {{ average_ml_score }}/100
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= RISK ANALYTICS ================= -->
+
+            <div class="overview-card">
+
+                <h3>
+                    ⚠ Risk Analytics
+                </h3>
+
+
+                <div class="severity-item">
+
+                    <span>
+                        Average Risk Score
+                    </span>
+
+                    <strong>
+                        {{ average_risk_score }}/100
+                    </strong>
+
+                </div>
+
+
+                <div class="severity-item">
+
+                    <span>
+                        Critical Alerts
+                    </span>
+
+                    <strong>
+                        {{ critical_alerts }}
+                    </strong>
+
+                </div>
+
+
+                <div class="severity-item">
+
+                    <span>
+                        High Alerts
+                    </span>
+
+                    <strong>
+                        {{ high_alerts }}
+                    </strong>
+
+                </div>
+
+
+                <div class="severity-item">
+
+                    <span>
+                        Medium Alerts
+                    </span>
+
+                    <strong>
+                        {{ medium_alerts }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             THREAT / SYSTEM STATUS
+        ====================================================== -->
+
+        <section class="security-overview">
+
+
+            <!-- ================= THREAT SEVERITY ================= -->
+
+            <div class="overview-card">
+
+                <h3>
+                    Threat Severity
+                </h3>
+
+
+                <div class="severity-item severity-critical">
+
+                    <span>
+                        <span class="severity-dot"></span>
+                        Critical
+                    </span>
+
+                    <strong>
+                        {{ critical_alerts }}
+                    </strong>
+
+                </div>
+
+
+                <div class="severity-item severity-high">
+
+                    <span>
+                        <span class="severity-dot"></span>
+                        High
+                    </span>
+
+                    <strong>
+                        {{ high_alerts }}
+                    </strong>
+
+                </div>
+
+
+                <div class="severity-item severity-medium">
+
+                    <span>
+                        <span class="severity-dot"></span>
+                        Medium
+                    </span>
+
+                    <strong>
+                        {{ medium_alerts }}
+                    </strong>
+
+                </div>
+
+
+                <div class="severity-item severity-low">
+
+                    <span>
+                        <span class="severity-dot"></span>
+                        Low
+                    </span>
+
+                    <strong>
+                        {{ low_alerts }}
+                    </strong>
+
+                </div>
+
+
+                <div class="severity-item severity-info">
+
+                    <span>
+                        <span class="severity-dot"></span>
+                        Informational
+                    </span>
+
+                    <strong>
+                        {{ informational }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= SYSTEM STATUS ================= -->
+
+            <div class="overview-card">
+
+                <h3>
+                    System Status
+                </h3>
+
+
+                <div class="system-status-item">
+
+                    <div class="system-status-name">
+
+                        <span class="system-status-dot status-active"></span>
+
+                        <span>
+                            Threat Intelligence
+                        </span>
+
+                    </div>
+
+                    <strong class="status-text-active">
+                        Active
+                    </strong>
+
+                </div>
+
+
+                <div class="system-status-item">
+
+                    <div class="system-status-name">
+
+                        <span class="system-status-dot status-active"></span>
+
+                        <span>
+                            Database
+                        </span>
+
+                    </div>
+
+                    <strong class="status-text-active">
+                        Connected
+                    </strong>
+
+                </div>
+
+
+                <div class="system-status-item">
+
+                    <div class="system-status-name">
+
+                        <span class="system-status-dot status-active"></span>
+
+                        <span>
+                            Detection Engine
+                        </span>
+
+                    </div>
+
+                    <strong class="status-text-active">
+                        Ready
+                    </strong>
+
+                </div>
+
+
+                <div class="system-status-item">
+
+                    <div class="system-status-name">
+
+                        <span class="system-status-dot status-active"></span>
+
+                        <span>
+                            Risk Engine
+                        </span>
+
+                    </div>
+
+                    <strong class="status-text-active">
+                        Active
+                    </strong>
+
+                </div>
+
+
+                <div class="system-status-item">
+
+                    <div class="system-status-name">
+
+                        <span class="system-status-dot status-active"></span>
+
+                        <span>
+                            CTI Enrichment
+                        </span>
+
+                    </div>
+
+                    <strong class="status-text-active">
+                        Available
+                    </strong>
+
+                </div>
+
+
+                <div class="system-status-item">
+
+                    <div class="system-status-name">
+
+                        <span class="system-status-dot status-active"></span>
+
+                        <span>
+                            ML Engine
+                        </span>
+
+                    </div>
+
+                    <strong class="status-text-active">
+                        Active
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             RECENT SECURITY ACTIVITY
+        ====================================================== -->
+
+        <section class="recent-searches">
+
+            <h2>
+                Recent Security Activity
+            </h2>
+
+            <p>
+                Latest alerts detected by the SentinelAI security engine.
+            </p>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Alert ID
+                        </th>
+
+                        <th>
+                            Attack Type
+                        </th>
+
+                        <th>
+                            Source IP
+                        </th>
+
+                        <th>
+                            Risk Score
+                        </th>
+
+                        <th>
+                            Severity
+                        </th>
+
+                        <th>
+                            MITRE Technique
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for alert in recent_alerts %}
+
+                    <tr>
+
+                        <td>
+
+                            <a href="/alerts/{{ alert.id }}">
+                                {{ alert.id }}
+                            </a>
+
+                        </td>
+
+
+                        <td>
+                            {{ alert.attack_type }}
+                        </td>
+
+
+                        <td>
+                            {{ alert.source_ip }}
+                        </td>
+
+
+                        <td>
+                            {{ alert.risk_score }}
+                        </td>
+
+
+                        <td>
+                            {{ alert.severity }}
+                        </td>
+
+
+                        <td>
+                            {{ alert.mitre_technique }}
+                        </td>
+
+
+                        <td>
+                            {{ alert.status }}
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="7">
+                            No security alerts found.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+
+        <!-- =====================================================
+             INCIDENT & MITRE ANALYTICS
+        ====================================================== -->
+
+        <section class="security-overview">
+
+
+            <!-- ================= INCIDENT CHART ================= -->
+
+            <div class="overview-card">
+
+                <h3>
+                    🚨 Incident Workflow
+                </h3>
+
+                <div style="
+                    position: relative;
+                    height: 280px;
+                    width: 100%;
+                ">
+
+                    <canvas
+                        id="incidentChart"
+                        data-incidents='{{ [open_incidents, investigating_incidents, resolved_incidents] | tojson }}'>
+                    </canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= MITRE CHART ================= -->
+
+            <div class="overview-card">
+
+                <h3>
+                    🎯 MITRE ATT&CK Activity
+                </h3>
+
+                <div style="
+                    position: relative;
+                    height: 280px;
+                    width: 100%;
+                ">
+
+                    <canvas
+                        id="mitreChart"
+                        data-mitre-counts='{{ mitre_counts | tojson }}'>
+                    </canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             RECENT THREAT SEARCHES
+        ====================================================== -->
+
+        <section class="recent-searches">
+
+            <h2>
+                Recent Threat Searches
+            </h2>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Indicator
+                        </th>
+
+                        <th>
+                            Type
+                        </th>
+
+                        <th>
+                            Score
+                        </th>
+
+                        <th>
+                            Risk Level
+                        </th>
+
+                        <th>
+                            Country
+                        </th>
+
+                        <th>
+                            Organization
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for search in searches %}
+
+                    <tr>
+
+                        <td>
+                            {{ search.indicator }}
+                        </td>
+
+                        <td>
+                            {{ search.indicator_type }}
+                        </td>
+
+                        <td>
+                            {{ search.threat_score }}
+                        </td>
+
+                        <td>
+                            {{ search.risk_level }}
+                        </td>
+
+                        <td>
+                            {{ search.country or "N/A" }}
+                        </td>
+
+                        <td>
+                            {{ search.organization or "N/A" }}
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="6">
+                            No threat searches found.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =====================================================
+     CHART JAVASCRIPT
+====================================================== -->
+
+<script>
+
+
+    // =====================================================
+    // ATTACK TYPE CHART
+    // =====================================================
+
+    const attackTypeCanvas =
+        document.getElementById("attackTypeChart");
+
+
+    if (attackTypeCanvas) {
+
+        const attackTypeCounts =
+            JSON.parse(
+                attackTypeCanvas.dataset.attackTypes || "{}"
+            );
+
+
+        const attackTypeLabels =
+            Object.keys(attackTypeCounts);
+
+
+        const attackTypeData =
+            Object.values(attackTypeCounts);
+
+
+        new Chart(
+            attackTypeCanvas,
+            {
+                type: "doughnut",
+
+                data: {
+
+                    labels: attackTypeLabels,
+
+                    datasets: [
+
+                        {
+                            data: attackTypeData,
+
+                            borderWidth: 2
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+
+                            position: "bottom"
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // SEVERITY CHART
+    // =====================================================
+
+    const severityCanvas =
+        document.getElementById("severityChart");
+
+
+    if (severityCanvas) {
+
+        const severityData = [
+
+            Number(
+                severityCanvas.dataset.critical || 0
+            ),
+
+            Number(
+                severityCanvas.dataset.high || 0
+            ),
+
+            Number(
+                severityCanvas.dataset.medium || 0
+            ),
+
+            Number(
+                severityCanvas.dataset.low || 0
+            ),
+
+            Number(
+                severityCanvas.dataset.informational || 0
+            )
+
+        ];
+
+
+        const severityLabels = [
+
+            "Critical",
+            "High",
+            "Medium",
+            "Low",
+            "Informational"
+
+        ];
+
+
+        new Chart(
+            severityCanvas,
+            {
+                type: "bar",
+
+                data: {
+
+                    labels: severityLabels,
+
+                    datasets: [
+
+                        {
+                            label: "Alerts",
+
+                            data: severityData,
+
+                            borderWidth: 1
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            ticks: {
+
+                                precision: 0
+
+                            }
+
+                        }
+
+                    },
+
+                    plugins: {
+
+                        legend: {
+
+                            display: false
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // INCIDENT WORKFLOW CHART
+    // =====================================================
+
+    const incidentCanvas =
+        document.getElementById("incidentChart");
+
+
+    if (incidentCanvas) {
+
+        const incidentData =
+            JSON.parse(
+                incidentCanvas.dataset.incidents ||
+                "[0, 0, 0]"
+            );
+
+
+        const incidentLabels = [
+
+            "Open",
+            "Investigating",
+            "Resolved / Closed"
+
+        ];
+
+
+        new Chart(
+            incidentCanvas,
+            {
+                type: "bar",
+
+                data: {
+
+                    labels: incidentLabels,
+
+                    datasets: [
+
+                        {
+                            label: "Incidents",
+
+                            data: incidentData,
+
+                            borderWidth: 1
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            ticks: {
+
+                                precision: 0
+
+                            }
+
+                        }
+
+                    },
+
+                    plugins: {
+
+                        legend: {
+
+                            display: false
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // MITRE ATT&CK CHART
+    // =====================================================
+
+    const mitreCanvas =
+        document.getElementById("mitreChart");
+
+
+    if (mitreCanvas) {
+
+        const mitreCounts =
+            JSON.parse(
+                mitreCanvas.dataset.mitreCounts || "{}"
+            );
+
+
+        const mitreLabels =
+            Object.keys(mitreCounts);
+
+
+        const mitreData =
+            Object.values(mitreCounts);
+
+
+        new Chart(
+            mitreCanvas,
+            {
+                type: "bar",
+
+                data: {
+
+                    labels: mitreLabels,
+
+                    datasets: [
+
+                        {
+                            label: "Alerts",
+
+                            data: mitreData,
+
+                            borderWidth: 1
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            ticks: {
+
+                                precision: 0
+
+                            }
+
+                        }
+
+                    },
+
+                    plugins: {
+
+                        legend: {
+
+                            display: false
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

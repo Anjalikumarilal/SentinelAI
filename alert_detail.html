@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Alert Investigation - SentinelAI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="dashboard">
+
+
+    <!-- ================================================= -->
+    <!-- NAVBAR -->
+    <!-- ================================================= -->
+
+    <header class="navbar">
+
+        <h1>🛡 SentinelAI</h1>
+
+        <span>
+            Security Operations Center
+        </span>
+
+    </header>
+
+
+    <!-- ================================================= -->
+    <!-- SIDEBAR -->
+    <!-- ================================================= -->
+
+    <aside class="sidebar">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/alerts">
+            Alerts
+        </a>
+
+        <a href="/threat-intelligence">
+            Threat Intelligence
+        </a>
+
+        <a href="/incidents">
+            Incidents
+        </a>
+
+        <a href="/mitre">
+            MITRE ATT&CK
+        </a>
+
+        <a href="/pcap-analysis">
+            PCAP Analysis
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- ================================================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ================================================= -->
+
+    <main class="main-content">
+
+
+        <h2>
+            Security Alert #{{ alert.id }}
+        </h2>
+
+        <p>
+            Investigate and analyze the detected security alert.
+        </p>
+
+
+        <!-- ================================================= -->
+        <!-- ALERT OVERVIEW -->
+        <!-- ================================================= -->
+
+        <section class="detail-card">
+
+            <h3>
+                Alert Information
+            </h3>
+
+
+            <table class="detail-table">
+
+
+                <tr>
+
+                    <th>
+                        Alert ID
+                    </th>
+
+                    <td>
+                        {{ alert.id }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Attack Type
+                    </th>
+
+                    <td>
+                        {{ alert.attack_type or "Unknown" }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Source IP
+                    </th>
+
+                    <td>
+                        {{ alert.source_ip or "Unknown" }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Destination IP
+                    </th>
+
+                    <td>
+                        {{ alert.destination_ip or "Unknown" }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Risk Score
+                    </th>
+
+                    <td>
+
+                        <strong>
+                            {{ alert.risk_score or 0 }}/100
+                        </strong>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Severity
+                    </th>
+
+                    <td>
+                        {{ alert.severity or "Unknown" }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <td>
+                        {{ alert.status or "Unknown" }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        AI Confidence
+                    </th>
+
+                    <td>
+                        {{ alert.ai_confidence or 0 }}%
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Created At
+                    </th>
+
+                    <td>
+                        {{ alert.created_at or "Unknown" }}
+                    </td>
+
+                </tr>
+
+
+            </table>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- THREAT INTELLIGENCE -->
+        <!-- ================================================= -->
+
+        <section class="detail-card">
+
+            <h3>
+                Cyber Threat Intelligence
+            </h3>
+
+
+            <div class="threat-intelligence">
+
+                {{ alert.threat_intelligence or
+                   "No threat intelligence available." }}
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- MITRE ATT&CK -->
+        <!-- ================================================= -->
+
+        <section class="detail-card">
+
+            <h3>
+                MITRE ATT&CK
+            </h3>
+
+
+            <table class="detail-table">
+
+                <tr>
+
+                    <th>
+                        Technique
+                    </th>
+
+                    <td>
+                        {{ alert.mitre_technique or
+                           "Not mapped" }}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- RISK ANALYSIS -->
+        <!-- ================================================= -->
+
+        <section class="detail-card">
+
+            <h3>
+                Risk Analysis
+            </h3>
+
+
+            <div class="risk-box">
+
+
+                <div class="risk-score">
+
+                    <span>
+                        Final Risk Score
+                    </span>
+
+                    <strong>
+                        {{ alert.risk_score or 0 }}/100
+                    </strong>
+
+                </div>
+
+
+                <div class="risk-bar">
+
+                    <div
+                        class="risk-fill"
+                        data-risk="{{ alert.risk_score or 0 }}">
+                    </div>
+
+                </div>
+
+
+                <p>
+
+                    Severity:
+
+                    <strong>
+                        {{ alert.severity or "Unknown" }}
+                    </strong>
+
+                </p>
+                
+                <div style="
+                    margin-top: 20px;
+                    padding-top: 15px;
+                    border-top: 1px solid #e2e8f0;
+                ">
+
+                    <h4 style="margin-bottom: 12px;">
+                        Risk Score Breakdown
+                    </h4>
+
+                    <div class="risk-breakdown-row">
+                        <span>
+                            Detection Risk
+                        </span>
+
+                        <strong>
+                            {{ alert.detection_score or 0 }}/100
+                        </strong>
+                    </div>
+
+                    <div class="risk-breakdown-row">
+                        <span>
+                            CTI Threat Score
+                        </span>
+
+                        <strong>
+                            {{ alert.cti_score or 0 }}/100
+                        </strong>
+                    </div>
+
+                    <div class="risk-breakdown-row">
+                        <span>
+                            ML Anomaly Score
+                        </span>
+
+                        <strong>
+                            {{ alert.ml_score or 0 }}/100
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- INVESTIGATION ACTIONS -->
+        <!-- ================================================= -->
+
+       <section class="detail-card">
+
+            <h3>Investigation Actions</h3>
+
+            <div class="action-buttons">
+
+                {% if alert.incident_id %}
+
+                <a
+                    href="{{ url_for(
+                        'incidents.incident_detail',
+                        incident_id=alert.incident_id
+                    ) }}"
+                    class="action-button">
+                    View Incident
+                </a>
+
+                {% else %}
+
+                <a
+                    href="/incidents"
+                    class="action-button">
+                    View Incidents
+                </a>
+
+                {% endif %}
+
+                <a
+                    href="/alerts"
+                    class="action-button">
+                    Back to Alerts
+                </a>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+<script>
+    const riskFill = document.querySelector(".risk-fill");
+
+    if (riskFill) {
+        const riskScore = Number(riskFill.dataset.risk) || 0;
+
+        riskFill.style.width = riskScore + "%";
+    }
+</script>
+
+</body>
+
+</html>

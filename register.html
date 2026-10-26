@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Register - SentinelAI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background: #f4f7fb;
+
+            color: #1f2937;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        /* =========================
+           AUTH CONTAINER
+        ========================= */
+
+        .auth-container {
+
+            width: 100%;
+
+            max-width: 440px;
+
+            padding: 20px;
+
+        }
+
+
+        /* =========================
+           BRAND
+        ========================= */
+
+        .brand {
+
+            text-align: center;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .brand h1 {
+
+            font-size: 28px;
+
+            color: #111827;
+
+            margin-bottom: 6px;
+
+        }
+
+
+        .brand p {
+
+            color: #64748b;
+
+            font-size: 14px;
+
+        }
+
+
+        /* =========================
+           REGISTER CARD
+        ========================= */
+
+        .auth-card {
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08);
+
+        }
+
+
+        .auth-card h2 {
+
+            text-align: center;
+
+            margin-bottom: 8px;
+
+            color: #111827;
+
+        }
+
+
+        .auth-subtitle {
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            margin-bottom: 28px;
+
+        }
+
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-group {
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .form-group label {
+
+            display: block;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            margin-bottom: 8px;
+
+            color: #374151;
+
+        }
+
+
+        .form-group input {
+
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition: 0.2s;
+
+        }
+
+
+        .form-group input:focus {
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px rgba(37, 99, 235, 0.10);
+
+        }
+
+
+        /* =========================
+           REGISTER BUTTON
+        ========================= */
+
+        .register-button {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+        }
+
+
+        .register-button:hover {
+
+            background: #1d4ed8;
+
+        }
+
+
+        .register-button:disabled {
+
+            opacity: 0.7;
+
+            cursor: not-allowed;
+
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        .message {
+
+            margin-top: 18px;
+
+            text-align: center;
+
+            font-size: 14px;
+
+            min-height: 20px;
+
+        }
+
+
+        .message.error {
+
+            color: #dc2626;
+
+        }
+
+
+        .message.success {
+
+            color: #16a34a;
+
+        }
+
+
+        /* =========================
+           LOGIN LINK
+        ========================= */
+
+        .auth-link {
+
+            text-align: center;
+
+            margin-top: 24px;
+
+            font-size: 14px;
+
+            color: #64748b;
+
+        }
+
+
+        .auth-link a {
+
+            color: #2563eb;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+        }
+
+
+        .auth-link a:hover {
+
+            text-decoration: underline;
+
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 500px) {
+
+            .auth-card {
+
+                padding: 25px;
+
+            }
+
+            .brand h1 {
+
+                font-size: 24px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="auth-container">
+
+
+        <!-- BRAND -->
+
+        <div class="brand">
+
+            <h1>🛡 SentinelAI</h1>
+
+            <p>
+                Security Operations Center
+            </p>
+
+        </div>
+
+
+        <!-- REGISTER CARD -->
+
+        <div class="auth-card">
+
+            <h2>
+                Create Account
+            </h2>
+
+            <p class="auth-subtitle">
+                Register to access the SentinelAI security dashboard
+            </p>
+
+
+            <form id="registerForm">
+
+
+                <!-- NAME -->
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter your name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Minimum 6 characters"
+                        minlength="6"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- BUTTON -->
+
+                <button
+                    type="submit"
+                    class="register-button"
+                    id="registerButton"
+                >
+                    Create Account
+                </button>
+
+
+            </form>
+
+
+            <!-- MESSAGE -->
+
+            <p
+                id="message"
+                class="message"
+            ></p>
+
+
+            <!-- LOGIN LINK -->
+
+            <div class="auth-link">
+
+                Already have an account?
+
+                <a href="/login">
+                    Login
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer">
+
+            SentinelAI Cyber Threat Intelligence Platform
+
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+        document
+            .getElementById("registerForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+
+                const name =
+                    document.getElementById("name").value.trim();
+
+                const email =
+                    document.getElementById("email").value.trim();
+
+                const password =
+                    document.getElementById("password").value;
+
+
+                const message =
+                    document.getElementById("message");
+
+                const button =
+                    document.getElementById("registerButton");
+
+
+                message.textContent = "";
+
+                message.className = "message";
+
+
+                button.disabled = true;
+
+                button.textContent = "Creating Account...";
+
+
+                try {
+
+                    const response = await fetch("/register", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            name: name,
+
+                            email: email,
+
+                            password: password
+
+                        })
+
+                    });
+
+
+                    const result =
+                        await response.json();
+
+
+                    if (response.ok) {
+
+                        message.textContent =
+                            "Registration successful. Redirecting to login...";
+
+                        message.className =
+                            "message success";
+
+
+                        setTimeout(function() {
+
+                            window.location.href =
+                                "/login";
+
+                        }, 700);
+
+
+                    } else {
+
+                        message.textContent =
+                            result.error || "Registration failed.";
+
+                        message.className =
+                            "message error";
+
+                        button.disabled = false;
+
+                        button.textContent =
+                            "Create Account";
+
+                    }
+
+
+                } catch (error) {
+
+                    message.textContent =
+                        "Unable to connect to the server.";
+
+                    message.className =
+                        "message error";
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        "Create Account";
+
+                }
+
+            });
+
+    </script>
+
+
+</body>
+
+</html>
