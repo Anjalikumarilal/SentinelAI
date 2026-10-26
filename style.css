@@ -1,0 +1,635 @@
+/* =========================================================
+   GLOBAL RESET
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #1f2937;
+}
+
+.dashboard {
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.navbar {
+    background: #111827;
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar h1 {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.navbar span {
+    font-size: 14px;
+    color: #d1d5db;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+    width: 220px;
+    background: #1f2937;
+    color: white;
+    position: fixed;
+    top: 65px;
+    bottom: 0;
+    left: 0;
+    padding: 25px 15px;
+    z-index: 900;
+    overflow-y: auto;
+}
+
+.sidebar a {
+    display: block;
+    color: #f9fafb;
+    text-decoration: none;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 7px;
+    font-size: 14px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar a:hover {
+    background: #374151;
+    transform: translateX(3px);
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.main-content {
+    margin-left: 220px;
+    padding: 30px;
+    min-height: calc(100vh - 65px);
+}
+
+.main-content > h2 {
+    font-size: 26px;
+    margin-bottom: 6px;
+    color: #111827;
+}
+
+.main-content > p {
+    color: #6b7280;
+    margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+   ========================================================= */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    margin: 25px 0;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    min-height: 125px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #2563eb;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 18px rgba(0, 0, 0, 0.10);
+}
+
+.card h3 {
+    margin-bottom: 14px;
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.card p {
+    font-size: 30px;
+    font-weight: 700;
+    color: #111827;
+}
+
+
+/* =========================================================
+   SEARCH BOX
+   ========================================================= */
+
+.search-box {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.search-box input {
+    width: 70%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+}
+
+.search-box button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.search-box button:hover {
+    background: #1d4ed8;
+}
+
+
+/* =========================================================
+   RECENT SEARCH / TABLE CARDS
+   ========================================================= */
+
+.recent-searches {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 25px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+}
+
+.recent-searches h2 {
+    margin-bottom: 10px;
+    color: #111827;
+}
+
+.recent-searches p {
+    color: #6b7280;
+}
+
+.recent-searches table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    min-width: 700px;
+}
+
+.recent-searches th,
+.recent-searches td {
+    padding: 13px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
+}
+
+.recent-searches th {
+    background: #f3f4f6;
+    font-weight: 700;
+    color: #374151;
+}
+
+.recent-searches tr:hover {
+    background: #f9fafb;
+}
+
+.recent-searches td a {
+    color: #2563eb;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.recent-searches td a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   SECURITY OVERVIEW
+   ========================================================= */
+
+.security-overview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-top: 25px;
+}
+
+.overview-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    min-width: 0;
+}
+
+.overview-card h3 {
+    margin-bottom: 20px;
+    font-size: 17px;
+    color: #111827;
+}
+
+
+/* =========================================================
+   SEVERITY / STATISTICS ITEMS
+   ========================================================= */
+
+.severity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.severity-item:last-child {
+    border-bottom: none;
+}
+
+.severity-item span {
+    color: #4b5563;
+    font-size: 14px;
+}
+
+.severity-item strong {
+    font-size: 18px;
+    color: #111827;
+}
+
+
+/* =========================================================
+   ALERT DETAIL PAGE
+   ========================================================= */
+
+.detail-card {
+    background: white;
+    padding: 25px;
+    margin-top: 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+}
+
+.detail-card h3 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    color: #111827;
+}
+
+
+/* =========================================================
+   DETAIL TABLE
+   ========================================================= */
+
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.detail-table th,
+.detail-table td {
+    padding: 13px;
+    text-align: left;
+    border-bottom: 1px solid #e1e5ea;
+}
+
+.detail-table th {
+    width: 220px;
+    background: #f4f5f7;
+    color: #374151;
+}
+
+
+/* =========================================================
+   THREAT INTELLIGENCE
+   ========================================================= */
+
+.threat-intelligence {
+    background: #f4f6f8;
+    padding: 18px;
+    border-radius: 7px;
+    line-height: 1.7;
+    border: 1px solid #e5e7eb;
+}
+
+
+/* =========================================================
+   RISK ANALYSIS
+   ========================================================= */
+
+.risk-box {
+    padding: 10px 0;
+}
+
+.risk-score {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.risk-score strong {
+    font-size: 26px;
+    color: #111827;
+}
+
+.risk-bar {
+    width: 100%;
+    height: 18px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.risk-fill {
+    height: 100%;
+    background: #f59e0b;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+
+/* =========================================================
+   RISK SCORE BREAKDOWN
+   ========================================================= */
+
+.risk-breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.risk-breakdown-row:last-child {
+    border-bottom: none;
+}
+
+.risk-breakdown-row span {
+    color: #4b5563;
+}
+
+.risk-breakdown-row strong {
+    color: #111827;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.action-button {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #172033;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.action-button:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .security-overview {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .navbar {
+        padding: 15px 18px;
+    }
+
+    .navbar span {
+        display: none;
+    }
+
+    .sidebar {
+        width: 180px;
+    }
+
+    .main-content {
+        margin-left: 180px;
+        padding: 20px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        top: 0;
+        padding: 10px;
+    }
+
+    .sidebar a {
+        display: inline-block;
+        margin: 3px;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+}
+/* =========================================================
+   THREAT SEVERITY INDICATORS
+   ========================================================= */
+
+.severity-item > span {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+
+/* Severity dot */
+
+.severity-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+
+/* Critical */
+
+.severity-critical .severity-dot {
+    background: #dc2626;
+}
+
+.severity-critical strong {
+    color: #dc2626;
+}
+
+
+/* High */
+
+.severity-high .severity-dot {
+    background: #f97316;
+}
+
+.severity-high strong {
+    color: #ea580c;
+}
+
+
+/* Medium */
+
+.severity-medium .severity-dot {
+    background: #eab308;
+}
+
+.severity-medium strong {
+    color: #ca8a04;
+}
+
+
+/* Low */
+
+.severity-low .severity-dot {
+    background: #2563eb;
+}
+
+.severity-low strong {
+    color: #2563eb;
+}
+
+
+/* Informational */
+
+.severity-info .severity-dot {
+    background: #6b7280;
+}
+
+.severity-info strong {
+    color: #6b7280;
+}
+
+/* =========================================================
+   SYSTEM STATUS
+   ========================================================= */
+
+.system-status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.system-status-item:last-child {
+    border-bottom: none;
+}
+
+.system-status-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #374151;
+    font-size: 14px;
+}
+
+.system-status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
+}
+
+.status-active {
+    background: #22c55e;
+}
+
+.status-text-active {
+    color: #16a34a;
+    font-size: 13px;
+    font-weight: 600;
+}
